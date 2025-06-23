@@ -44,3 +44,37 @@ class Calculator:
     def toggle_mode(self):
         self.is_degrees = not self.is_degrees
         self.mode_label.config(text=f"Mode: {'Degrees' if self.is_degrees else 'Radians'}")
+
+    def evaluate_expression(self, expression):
+        try:
+            while "log(" in expression:
+                start = expression.find("log(")
+                end = expression.find(")", start)
+                if end == -1:
+                    raise ValueError("Unmatched parentheses in log function")
+
+                log_content = expression[start + 4:end]
+                parts = log_content.split(",")
+                if len(parts) == 1:
+                    log_result = math.log10(float(parts[0]))
+                elif len(parts) == 2:
+                    log_result = math.log(float(parts[0]), float(parts[1]))
+                else:
+                    raise ValueError("Invalid log format. Use log(value) or log(value, base)")
+
+                expression = expression[:start] + str(log_result) + expression[end + 1:]
+
+            def replace_trig(match):
+                func = match.group(1)
+                value = float(match.group(2))
+                if self.is_degrees:
+                    value = math.radians(value)
+                return str(getattr(math, func)(value))
+
+            expression = re.sub(r"(sin|cos|tan)\((-?\d+(\.\d*)?)\)", replace_trig, expression)
+
+            result = eval(expression, {"__builtins__": None}, math.__dict__)
+            return result
+
+        except Exception as e:
+            return f"Error: {e}"
