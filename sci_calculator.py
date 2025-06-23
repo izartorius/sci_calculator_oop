@@ -40,3 +40,7 @@ class Calculator:
 
             btn.grid(row=row, column=col, padx=5, pady=5,
                      columnspan=(2 if text == "Toggle Mode" else 1))
+
+    def toggle_mode(self):
+        self.is_degrees = not self.is_degrees
+        self.mode_label.config(text=f"Mode: {'Degrees' if self.is_degrees else 'Radians'}")
