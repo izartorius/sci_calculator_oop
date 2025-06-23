@@ -78,3 +78,17 @@ class Calculator:
 
         except Exception as e:
             return f"Error: {e}"
+
+    def calculate(self):
+        expression = self.entry.get().strip()
+        if not expression:
+            messagebox.showerror("Error", "Empty expression")
+            return
+
+        result = self.evaluate_expression(expression)
+
+        if isinstance(result, str) and result.startswith("Error"):
+            messagebox.showerror("Error", result)
+        else:
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, str(result))
