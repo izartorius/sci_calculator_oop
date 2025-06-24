@@ -92,3 +92,14 @@ class Calculator:
         else:
             self.entry.delete(0, tk.END)
             self.entry.insert(tk.END, str(result))
+
+        def insert_value(self, value):
+            self.entry.insert(tk.END, value)
+
+        def clear(self):
+            self.entry.delete(0, tk.END)
+
+    if __name__ == "__main__":
+        root = tk.Tk()
+        app = Calculator(root)
+        root.mainloop()
